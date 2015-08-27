@@ -1,0 +1,69 @@
+<html  lang="en" ng-app="WHS">
+    <head>
+        <link rel="stylesheet" href="css/font-awesome.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+        <link rel="stylesheet" href="https://www.google.com/fonts#UsePlace:use/Collection:Open+Sans+Condensed:300">
+        
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/hTagCloud.css">
+        <link rel="shortcut icon" type="image/png" href="/img/icon.png"/>
+        <meta name="viewport" content="initial-scale=1" />
+    </head>
+    <body ng-controller="MainCtrl">
+        <div id="App">
+            <div id="toolBar">
+                <h1>#VisualizeChange</h1>
+                <ul class="controls">
+                    <li ng-repeat="d in dimentions" >
+                        <label>{{ d.name }}:</label>
+                        <select ng-model="d.value" ng-options="item.name for item in d.options"></select>
+                    </li>
+                    <li>
+                        <input type="search" ng-model="search" placeholder="Search" />
+                    </li>
+                    <li>
+                        <button ng-click="doSearch()" >Load</button>
+                    </li>
+                    <li>
+                        <label>Texts Segments: </label>
+                        <span>{{ currentHits }}</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="views">
+                <div h-tag-cloud interface="interface"></div>
+            </div>
+            <div id="textView">
+                <ul ng-if="noHighlight">
+                    <li ng-repeat="h in hits">
+                       <h3>{{h._source.type}}</h3>
+                        {{ h._source.text }}
+                    </li>
+                </ul>
+                <ul ng-if="noHighlight == false">
+                    <li ng-repeat="h in hits">
+                       <h3>{{h._source.type}}</h3>
+                        <span ng-repeat="t in h.highlight.text" ng-bind-html="HTML(t) + ' / '" > </span>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+        <div class="loading">
+            
+        </div>
+    </body>
+    <!-- Angular Material Dependencies -->
+    <script src="vendors/core.min.js"></script>
+    <script src="vendors/lodash.js"></script>
+    <script src="vendors/d3.min.js"></script>
+    <script src="vendors/d3.layout.cloud.js"></script>
+    <script src="vendors/angular.js"></script>
+    <script src="vendors/angular-sanitize.min.js"></script>
+    <script src="vendors/elasticsearch.angular.js"></script>
+    <script src="vendors/elastic.min.js"></script>
+    <script src="js/server.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/HTagCloud.js"></script>
+</html>
