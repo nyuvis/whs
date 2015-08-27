@@ -3,7 +3,7 @@ var Services = angular.module('Services', ['elasticsearch']);
 
 Services.factory('Data', ['esFactory', function(es){
     var self = this;
-    self.client = new es({host: "http://localhost:9500"});
+    self.client = new es({host: "http://vgc.poly.edu/projects/r2sense"});
     
     self.run = function (query, aggs, options) {
         options = options || {};
