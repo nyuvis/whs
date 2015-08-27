@@ -37,7 +37,7 @@ App.directive('hTagCloud', function(){
             {
                 "key": "V3",
                 "name": "Values",
-                "default": 4,
+                "default": 5,
                 "options": [
                     {name: "National Context", field: "National Context"},
                     {name: "Public Input", field: "Public Input"},
