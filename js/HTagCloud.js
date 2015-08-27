@@ -13,7 +13,8 @@ App.directive('hTagCloud', function(){
                 "options": [
                     {name: "National Context", field: "National Context"},
                     {name: "Public Input", field: "Public Input"},
-                    {name: "Topic", field: "type"},
+                    {name: "Topic", field: "topic"},
+                    {name: "Sub-topic", field: "subtopic"},
                     {name: "Document", field: "Name"},
                     {name: "Stakeholder Group", field: "Stakeholder Group"}
                 ]
@@ -26,7 +27,8 @@ App.directive('hTagCloud', function(){
                     {name: "-- None --", field: "None"},
                     {name: "National Context", field: "National Context"},
                     {name: "Public Input", field: "Public Input"},
-                    {name: "Topic", field: "type"},
+                    {name: "Topic", field: "topic"},
+                    {name: "Sub-topic", field: "subtopic"},
                     {name: "Document", field: "Name"},
                     {name: "Stakeholder Group", field: "Stakeholder Group"}
                     
@@ -39,7 +41,8 @@ App.directive('hTagCloud', function(){
                 "options": [
                     {name: "National Context", field: "National Context"},
                     {name: "Public Input", field: "Public Input"},
-                    {name: "Topic", field: "type"},
+                    {name: "Topic", field: "topic"},
+                    {name: "Sub-topic", field: "subtopic"},
                     {name: "Document", field: "Name"},
                     {name: "Text", field: "text"},
                     {name: "Bi-grams", field: "bigrams"},
