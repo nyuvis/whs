@@ -1,0 +1,37 @@
+@import "theme";
+@lineSize: 50px;
+#hTagCloud {
+    white-space: nowrap;
+    .line {
+        /*
+        margin-bottom: 10px;
+        background-color: aliceblue;
+        float: left;
+        margin-bottom: 80px;*/
+        display: inline-block;
+        vertical-align: text-top;
+        background-color: aliceblue;
+        margin-right: 5px;
+        width: 150px;
+    }
+    
+    .mark {
+       font-family: "Open Sans Condensed";
+    }
+    
+    .detail {
+        
+        white-space: normal;
+        
+    }
+    
+    .header {
+        background-color: @primaryL1;
+        color: white;
+        white-space: normal;
+        padding: 3px;
+        width: 208px;
+        display: table-cell;
+        vertical-align: middle;
+    }
+}
