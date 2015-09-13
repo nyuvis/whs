@@ -1,0 +1,9 @@
+<div class="sidebarHeader">
+   <h2>Paragraphs</h2>
+    <span class="details">Showing {{data.documents.surrogates.length}} of {{data.documents.total}}</span>
+</div>
+<ul class="snippetList">
+   <li class="snippet" ng-repeat="doc in data.documents.surrogates">
+       <span  ng-bind-html="doc.text"></span>
+   </li>
+</ul>

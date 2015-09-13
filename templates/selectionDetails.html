@@ -1,0 +1,22 @@
+<div class="loading" style="position: absolute; opacity: 1"  ng-show="loading">...</div>
+<div class="sidebarHeader">
+    <h2>Selected:</h2>
+    <span class="selectedKey" ng-class="{small: type === 'group'}">
+       {{ selected.key }}
+    </span>
+    <table class="statsTable">
+        <tr>
+            <th>{{selected.numDocuments.value}}</td>
+            <th>{{selected.count ? selected.count : selected.doc_count}}</td>
+        </tr>
+        <tr>
+            <td>Documents</td>
+            <td>Paragraphs</td>
+        </tr>
+    </table>
+</div>
+<div class="chartList">
+    <div ng-repeat="key in keysList">
+        <div chart data="selected.detailsList[key]", selected='selected' ng-if="key !== state.field.key" key="key"></div>
+    </div>
+</div>

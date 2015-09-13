@@ -1,55 +1,136 @@
-/*global angular, ejs*/
-var App = angular.module("WHS", ['Services', 'ngSanitize']);
-App.controller("MainCtrl", ["$scope", "Data", "$sce", function($scope, data, $sce){
-    var interface = $scope.interface = {};
-    var views = [];
-   
-    $scope.HTML = function (html) {
-        return $sce.trustAsHtml(html);
+/*global angular get, d3, topojson*/
+var App = angular.module("App", ["Services", "ngSanitize"]);
+var scopeTest;
+var countries;
+App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $window) {
+    scope.state = {};
+    scope.fields = srv.fields;
+    scope.state.field = get(srv.fields, "topic");
+    scope.data = {groups: [], words: []};
+    
+    scope.init = function() {
+        scope.loading = 0;
+        scope.layout();
+        scope.loadData();
+         d3.json("js/world-topo-min.json", function(error, world) {
+            countries = topojson.feature(world, world.objects.countries).features;
+         });
     };
     
-    interface.register = function(view) {
-        $scope.dimentions = view.dimentions;
-        $scope.dimentions.forEach(function(d) {
-            d.value = d.options[d.default];
+    scope.loadData = function() {
+        scope.loading++;
+        return srv.getData(scope.state).then(function(result){
+            result.links.then(scope.setLinks);
+            scope.setData(result);
+            scope.loading--;
+            return result;
         });
-        views.push(view);
     };
     
-    interface.getData = function(aggs, options) {
-        options = options || {};
-        var query;
-        if($scope.search && $scope.search.length > 0){
-            query = ejs.MatchQuery('text', $scope.search);
+    scope.setState = function(state) {
+        if(state) {
+            scope.state = state;
         }
-        data.run(query, [aggs]).then(function(result){
-            if(options.exclusive){
-                return result;
-            } else {
-                $scope.currentHits = result.hits.total;
-                $scope.hits = result.hits.hits;
-                if($scope.search && $scope.search.length > 0) {
-                    $scope.noHighlight = false;
-                } else {
-                    $scope.noHighlight = true;
-                }
-                $scope.$broadcast("newData", result);
-            }
-        });
+        scope.loadData();
+    };
+    scope.setData = function(data) {
+        scope.data = data;
+        scope.$broadcast("data-updated", data);
+        
+        /*Temp */
+        scope.loadState(data);
     };
     
-    $scope.doSearch = function() {
-        $scope.$broadcast("dimUpdated", {});
+    scope.setLinks = function(links) {
+        scope.$broadcast("links-updated", links);
     };
     
-    $scope.$watchCollection(function(){
-        if(!$scope.dimentions) { return undefined; }
-        return $scope.dimentions.map(function(v) {
-            return v.value;
+    scope.layout = function() {
+        var headerRect = document.getElementById("header").getBoundingClientRect();
+        document.getElementById("vizBoard").style.height = $window.innerHeight - headerRect.height;
+        document.getElementById("vizBoard").style['margin-right'] = 450;
+        
+        var hasSelecteion = scope.state.selectedGroup || scope.state.selectedWord;
+        
+        var sideBarWidth = hasSelecteion ? 400 : 200;
+        
+        document.getElementById("sideBar").style.width = sideBarWidth;
+        
+        
+        document.getElementById("docList").style.width = 200;
+        document.getElementById("docList").style.right = 0;
+        document.getElementById("docList").style.top = headerRect.height;
+        
+        document.getElementById("selectionDetails").style.display = hasSelecteion ? "block" : "none";
+        document.getElementById("selectionDetails").style.width = 200;
+        document.getElementById("selectionDetails").style.right = 205;
+        document.getElementById("selectionDetails").style.top = headerRect.height;
+        
+        scope.$broadcast('layout-updated');
+    };
+    
+    scope.getDetails = function(data, field) {
+        return srv.getDetails(data, field);
+    };
+    
+    scope.loadState = function(data) {
+        data.links.then(function(){
+            //scope.$broadcast('word-clicked', data.words[0]);
         });
-    }, function(d, old) {
-        if(old && old.length > 0) {
-            $scope.$broadcast("dimUpdated", d);
-        }
+    };
+    /*Watchers *************************************************/
+    scope.$watch('state.field', function() {
+        scope.loadData();
     });
+    /***********************************************************/
+    scope.$on('group-clicked', function(evt, data) {
+        if(scope.state.selectedGroup !== data) {
+            if(data) {
+                data.details = scope.getDetails(data, scope.state.field.key);
+            }
+            scope.$broadcast('group-selected', data);
+        }
+        scope.state.selectedGroup = data;
+        scope.layout();
+    });
+    scope.$on('group-reload', function(evt, data) {
+        if(data) {
+            data.details = scope.getDetails(data, scope.state.field.key);
+        }
+        scope.$broadcast('group-reloaded', data);
+        scope.state.selectedGroup = data;
+    });
+    
+    scope.$on('word-hover', function(evt, data){
+         scope.$broadcast('word-highlighted', data);
+    });
+    
+    scope.$on('word-out', function(evt, data){
+         scope.$broadcast('word-unHighlighted', data);
+    });
+    
+    scope.$on('word-clicked', function(evt, data) {
+       
+        if(scope.state.selectedWord !== data) {
+            scope.state.selectedWord = data;
+            if(data) {
+                data.details = scope.getDetails(data, "text");
+            }
+            scope.$broadcast('word-selected', data);
+        }
+        scope.layout();
+    });
+    angular.element($window).bind('resize', scope.layout);
+    scopeTest = scope;
 }]);
+
+App.directive('ngEnter', function() {
+    return function(scope, element, attrs) {
+      return element.bind('search', function(event) {
+        scope.$apply(function() {
+          return scope.$eval(attrs.ngEnter);
+        });
+        return event.preventDefault();
+      });
+    };
+  });
