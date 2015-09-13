@@ -7,7 +7,7 @@
     <table class="statsTable">
         <tr>
             <th>{{selected.numDocuments.value}}</td>
-            <th>{{selected.count ? selected.count : selected.doc_count}}</td>
+            <th>{{selected.count ? selected.count : (selected.bg_count ? selected.bg_count: selected.doc_count) }}</td>
         </tr>
         <tr>
             <td>Documents</td>
