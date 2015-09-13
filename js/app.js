@@ -45,7 +45,7 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
         scope.$broadcast("links-updated", links);
     };
     
-    scope.layout = function() {
+    scope.layout = function(noEmit) {
         var headerRect = document.getElementById("header").getBoundingClientRect();
         document.getElementById("vizBoard").style.height = $window.innerHeight - headerRect.height;
         document.getElementById("vizBoard").style['margin-right'] = 450;
@@ -66,7 +66,7 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
         document.getElementById("selectionDetails").style.right = 205;
         document.getElementById("selectionDetails").style.top = headerRect.height;
         
-        scope.$broadcast('layout-updated');
+        if(!noEmit) {scope.$broadcast('layout-updated'); }
     };
     
     scope.getDetails = function(data, field) {
@@ -91,7 +91,7 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
             scope.$broadcast('group-selected', data);
         }
         scope.state.selectedGroup = data;
-        scope.layout();
+        scope.layout(true);
     });
     scope.$on('group-reload', function(evt, data) {
         if(data) {
@@ -118,7 +118,7 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
             }
             scope.$broadcast('word-selected', data);
         }
-        scope.layout();
+        scope.layout(true);
     });
     angular.element($window).bind('resize', scope.layout);
     scopeTest = scope;
