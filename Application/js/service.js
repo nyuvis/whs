@@ -12,7 +12,7 @@ Services.factory('srv', function(client) {
         { key: "Public Input", desc: "Public Input", type: ""},
         { key: "topic", desc: "Topic", type: ""},
         { key: "subtopic", desc: "Sub-topic", type: ""},
-        { key: "Pacific Region", desc: "Pacific Region", type: ""},
+        //{ key: "Pacific Region", desc: "Pacific Region", type: ""},
         { key: "WHS Output", desc: "WHS Output", type: ""},
         { key: "National Context", desc: "National Context", type: ""}
     ];
@@ -40,7 +40,7 @@ Services.factory('srv', function(client) {
             highlight.no_match_size = 200000;
         
         var aggs = ejs.TermsAggregation("topics")
-            .field(state.field.key).size(10)
+            .field(state.field.key).size(20)
             .agg(ejs.SignificantTermsAggregation("words")
                  .field("text")
                  .exclude(srv.exclude)
