@@ -1,0 +1,180 @@
+@color: #6A30A3;
+#vizBoard {
+    position: relative;
+    
+    #ringCloudHTML {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
+    }
+
+    .labelGroup {
+        max-width: 150px;
+        padding: 5px;
+        font-size: 11px;
+        position: absolute;
+    }
+    .arc {
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .arc:hover {
+        stroke: #000;
+        stroke-width: 2px;
+    }
+
+    .arc.selected {
+        stroke: #000;
+        stroke-width: 2px;
+    }
+    .dimmed {
+        opacity: 0.2;
+    }
+
+    .gray path {
+        fill: #eee !important;
+    }
+
+    .cloudWord {
+        cursor: pointer;
+    }
+    .cloudWord:hover {
+        text-decoration: underline;
+        color: red;
+    }
+}
+
+#sideBar {
+    transition: width 0.5s;
+    overflow: hidden;
+    position: fixed;
+    right: 0px;
+    top: 40px;
+    padding: 5px;
+    bottom: 0px;
+    box-shadow: 0px 0px 10px #ccc;
+    z-index: 0;
+    #docList{
+        padding: 0px;
+        position: absolute;
+        bottom: 0px;
+    }
+    #selectionDetails {
+        padding: 0px;
+        position: absolute;
+        bottom: 0px;
+    }
+    .details{
+        font-size: 12px;
+        display: inline-block;
+        color: #999;
+        text-align: right;
+    }
+    .snippetList{
+        padding: 0px;
+        list-style: none;
+        margin: 0px;
+        text-align: left;
+        position: absolute;
+        bottom: 0px;
+        top: 50px;
+        left: 0px;
+        right: 0px;
+        overflow: auto;
+    }
+    .snippet {
+        font-family: "Times new roman";
+        font-size: 8pt;
+        margin: 10px 0px 10px 0px;
+        padding: 5px;
+        border-top: solid 1px #6a30a3;
+        h3 {
+            margin: 0px;
+            border-bottom: solid 1px;
+            font-size: 8pt;
+            margin-bottom: 5px;
+        }
+        em {
+            color: #6a30a3;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    }
+}
+.selectedKey {
+    font-size: 25px;
+    display: block;
+    text-align: center;
+    font-weight: bold;
+}
+
+.selectedKey.small{
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.chart {
+    margin-bottom: 30px;
+}
+
+.statsTable {
+    width: 100%;
+    margin-top: 10px;
+    th {
+        font-size: 25px;
+        font-weight: bold;
+        text-align: center;
+    }
+    td {
+        font-size: 11px;
+        text-align: center;
+    }
+}
+
+.chartList {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    overflow-x: auto;
+    bottom: 0px;
+    top: 130px;
+    padding: 5px;
+    .chartTitle {
+        margin-top: 10px;
+        
+        font-size: 14px;
+    }
+}
+
+.tooltipBody {
+    max-width: 200px;
+    background-color: white;
+    box-shadow: 0px 0px 10px #ccc;
+    padding: 10px;
+    h4{
+        margin: 0px;
+        padding: 0px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
