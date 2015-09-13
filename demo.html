@@ -1,0 +1,73 @@
+<html ng-app="App">
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+        <link href="style/app.css" rel="stylesheet" type="text/css">
+        <link href="js/c3.css" rel="stylesheet" type="text/css">
+        <link href="style/header.css" rel="stylesheet" type="text/css">
+        <link href="style/directives.css" rel="stylesheet" type="text/css">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+        <script src="https://code.angularjs.org/1.4.5/angular-sanitize.js"></script>
+        
+    </head>
+    <body ng-controller="AppCtrl" ng-init="init()">
+       <div class="loading" ng-show="loading">
+          <img src="loading.gif" width="200px;" />
+          <br/>
+          <br/>
+           Loading...
+       </div>
+        <div id="header">
+            <ul class="controls">
+                <li class="title"><h1>#VisualizeChange</h1></li>
+                <li>
+                    <label>Search: </label>
+                    <input type="search" ng-model="state.search" ng-enter="setState()" />
+                </li>
+                <li>
+                    <label>Select: </label>
+                    <select ng-options="item.desc for item in fields" ng-model="state.field"></select>
+                </li>
+                <li class="combo" style="display:none">
+                    <label>Ring: </label>
+                    <div class="comboValue">
+                        <span>Fiji, Better</span>
+                        <div class="comboWindow">
+                            <ul>
+                                <li>Topics</li>
+                                <li>Op2</li>
+                                <li>Op3</li>
+                                <li>Op4</li>
+                            </ul>
+                        </div>
+                    <div>
+                </li>
+            </ul>
+            <ul class="right controls">
+                <li>
+                    <a href="index.html">About</a>
+                </li>
+            </ul>
+        </div>
+        <div id="vizBoard">
+            <ring-cloud class="ringCloud"></ring-cloud>
+        </div>
+        <div id="sideBar">
+            <div id="selectionDetails" selection-details state="state"></div>
+            <div id="docList" doc-list></div>
+        </div>
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js"></script>
+    <script src="js/c3.js"></script>
+    <script src="js/elasticsearch.angular.js"></script>
+    <script src="js/elastic.js"></script>
+    <script src="js/d3.layout.cloud.js"></script>
+    <script src="js/service.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/ringCloud.js"></script>
+    <script src="js/docList.js"></script>
+    <script src="js/selectionDetails.js"></script>
+    <script src="js/charts.js"></script>
+</html>
+<script>var reload = true;</script>
+<script src="fb-flo/client.js"></script>

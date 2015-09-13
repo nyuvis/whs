@@ -1,73 +1,102 @@
-<html ng-app="App">
+<html>
     <head>
-        <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
-        <link href="style/app.css" rel="stylesheet" type="text/css">
-        <link href="js/c3.css" rel="stylesheet" type="text/css">
-        <link href="style/header.css" rel="stylesheet" type="text/css">
-        <link href="style/directives.css" rel="stylesheet" type="text/css">
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
-        <script src="https://code.angularjs.org/1.4.5/angular-sanitize.js"></script>
-        
+        <link href='https://fonts.googleapis.com/css?family=Josefin+Sans:400,300,700' rel='stylesheet' type='text/css'>
+        <link href="style/about.css" rel="stylesheet" type="text/css">
     </head>
-    <body ng-controller="AppCtrl" ng-init="init()">
-       <div class="loading" ng-show="loading">
-          <img src="loading.gif" width="200px;" />
-          <br/>
-          <br/>
-           Loading...
-       </div>
+    <body>
         <div id="header">
-            <ul class="controls">
-                <li class="title"><h1>#VisualizeChange</h1></li>
-                <li>
-                    <label>Search: </label>
-                    <input type="search" ng-model="state.search" ng-enter="setState()" />
-                </li>
-                <li>
-                    <label>Select: </label>
-                    <select ng-options="item.desc for item in fields" ng-model="state.field"></select>
-                </li>
-                <li class="combo" style="display:none">
-                    <label>Ring: </label>
-                    <div class="comboValue">
-                        <span>Fiji, Better</span>
-                        <div class="comboWindow">
-                            <ul>
-                                <li>Topics</li>
-                                <li>Op2</li>
-                                <li>Op3</li>
-                                <li>Op4</li>
-                            </ul>
-                        </div>
-                    <div>
-                </li>
-            </ul>
-            <ul class="right controls">
-                <li>
-                    <a href="#">About</a>
-                </li>
-            </ul>
+            <h1>WHS Explorer</h1>
+            <a class="button" href="demo.html">Launch Demo</a>
         </div>
-        <div id="vizBoard">
-            <ring-cloud class="ringCloud"></ring-cloud>
-        </div>
-        <div id="sideBar">
-            <div id="selectionDetails" selection-details state="state"></div>
-            <div id="docList" doc-list></div>
+        <div class="content">
+           <div class="page">
+               <h1>WHS Explorer</h1>
+               <div class="text">
+                   Explore the World Humanitarian Summit Data and understand the discussed topics and how they are related to keywords on the texts and other variables
+               </div>
+               <img src="aboutImgs/Main.jpg" style="width: 1000px">
+            </div>
+            <div class="page" style="background-color: #fafafa">
+               <div class="box line">
+               <h1>Topic Ring</h1>
+                   <div class="text">
+                       <p>The topic ring allows the the user to segment the data by nay variable like Topics, National Context or Submission Source. 
+                       Each value in the variable is represented by on arc along the ring with the angle proportional to the <b>number</b> of paragraphs related to the specific value</p>
+                       <p>The center of the ring contains words thar are relevant to one or some of the topics, the size of the word is represents the number of paragraphs containing the word, 
+                           the color represent the importance of the word from <b style="color:#98abc5">Relevant</b> to <b style="color:#e079b8">Highly Relevant</b></p>
+                   </div>
+                </div>
+               <img src="aboutImgs/Wheel.jpg" style="width: 600px" class="shadow">
+            </div>
+            <div class="page">
+               <h1>Significant Words</h1>
+               <div class="text" style="margin-bottom: 20px">
+                   Want to understand more about a topic or what is important for a country? Clicking in one of the ring's arcs revels words that apears more frequently in that specific value than in the rest of the documents.
+               </div>
+               <ul>
+                   <li>
+                       <img src="aboutImgs/Significant1.jpg" class="border">
+                       <span class="caption">Words like <b style="color:#e079b8">girl</b>, <b style="color:#e079b8">refugees</b> and <b style="color:#e079b8">women</b> are highly relevant in documents from <b style="color: rgb(188, 189, 34)">Jordan</b></span>
+                   </li>
+                   <li>
+                       <img src="aboutImgs/Significant2.jpg" class="border">
+                       <span class="caption"><b style="color:rgb(23, 190, 207)">Congo</b> is not only concerned about <b style="color:#98abc5">woman</b> and <b style="color:#98abc5">family</b> but also about 
+                           <b style="color:#e079b8">energy</b> and <b style="color:#e079b8">fuel</b> for <b style="color:#e079b8">cooking</b></span>
+                   </li>
+                   <li>
+                       <img src="aboutImgs/Significant3.jpg" class="border">
+                       <span class="caption">In documents comming from <b style="color:rgb(247, 182, 210)">Fiji</b> we can easily see the importance of the word <b style="color:#e079b8">disater</b></span>
+                   </li>
+               </ul>
+            </div>
+            <div class="page" style="background-color: #f8f8f8">
+               <h1>Understanding Words</h1>
+               <div class="text" style="margin-bottom: 20px; width: 700px">
+                   Understanding how a word is related with a Topic, Region or Type of document is also easy. When hovering a word, 
+                   the system shows the proportion of documents containig the word for each value in the ring. Want more details? 
+                   click and the system will show de distribution of documents containing the word in each variable
+               </div>
+               <img src="aboutImgs/Word.jpg" class="shadow">
+               
+            </div>
+            <div class="page" >
+               <h1>Search</h1>
+               <div class="text" style="margin-bottom: 20px" style="width: 550px; margin-bottom: 20px">
+                   Use the search to filter all results and statistics to consider only documents you are interested and use the <B>Paragraphs</B> pane to read the original contents of the documents
+               </div>
+               <img src="aboutImgs/Search.jpg" style="width: 600px" class="shadow">
+               <div class="box line">
+                   <ul class="textList">
+                       <li><span class="quote">“</span>Make the locals part of <em>solution</em>. This can be really innovative.<span class="quote end">”</span></li>
+                       <li>“Youth are not the problem, they are the <em>solution</em>.”</li>
+                       <li>“Facilitating and supporting local <em>solutions</em> can be shared openly to enable scaling.”</li>
+                       <li>“Sixth, the humanitarian community should engage and partner with local and international private sector for product <em>solutions</em> and scalable, sustainable outcomes.”</li>
+                       <li>“<em>Solutions</em> should be innovative, and promote better sharing, networking, inter-operability and co-operation between different stakeholders”.</li>
+                       <li>“It is important in protracted crises for humanitarian organizations to move beyond a fire-fighting role and seek longer-term <em>solutions</em> to people’s suffering.”</li>
+                       <li>“Are you aware of any innovative <em>solutions</em> that were/are used to meet humanitarian needs? Not at all.”</li>
+                   </ul>
+                </div>               
+            </div>
+            <div class="page" style="background-color: #f8f8f8">
+                <img src="aboutImgs/logo.png" style="width: 400px;">
+                <h2><a href="demo.html" style="color: #6A30A3">Explore the Demo</a></h2>
+                <div>
+                    <ul class="credits">
+                        <li>
+                            Cristian Felix<br>
+                            <a href="mailto:cristian.felix@nyu.edu">cristian.felix@nyu.edu</a></li>
+                        <li>
+                            Enrico Bertini<br />
+                            <a href="mailto:enrico.bertini@nyu.edu">enrico.bertini@nyu.edu</a></li>
+                        <li>Anshul Pandey<br />
+                            <a href="mailto:anshul.pandey@nyu.edu">anshul.pandey@nyu.edu</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js"></script>
-    <script src="js/c3.js"></script>
-    <script src="js/elasticsearch.angular.js"></script>
-    <script src="js/elastic.js"></script>
-    <script src="js/d3.layout.cloud.js"></script>
-    <script src="js/service.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/ringCloud.js"></script>
-    <script src="js/docList.js"></script>
-    <script src="js/selectionDetails.js"></script>
-    <script src="js/charts.js"></script>
+   
 </html>
-<script>var reload = true;</script>
-<script src="fb-flo/client.js"></script>
