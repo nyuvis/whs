@@ -40,7 +40,7 @@ Services.factory('srv', function(client) {
             highlight.no_match_size = 200000;
         
         var aggs = ejs.TermsAggregation("topics")
-            .field(state.field.key).size(100)
+            .field(state.field.key).size(10)
             .agg(ejs.SignificantTermsAggregation("words")
                  .field("text")
                  .exclude(srv.exclude)
@@ -142,9 +142,13 @@ Services.factory('srv', function(client) {
                     }
                 });
             });
-            words = words.sort(function(a, b) { return d3.descending(a.score, b.score); });
             var links = srv.getWordsInfo(words.map(function(w) { return w.key; }));
-            words = words.splice(0, 100);
+            words = words.sort(function(a, b) { return d3.descending(a.score, b.score); });
+            var wordsScore = words.slice(0, 50);
+            words.splice(0, 50);
+            words = words.sort(function(a, b) { return d3.descending(a.doc_count, b.doc_count); });
+            var wordsFrequent = words.slice(0, 50);
+            words = wordsFrequent.concat(wordsScore);
             var documents = {
                 total: data.hits.total,
                 surrogates: data.hits.hits.map(function(d) {
