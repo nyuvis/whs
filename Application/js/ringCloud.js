@@ -227,6 +227,7 @@ angular.module("App").directive("ringCloud", function() {
             };
             $scope.updateCloud = function(data) {
                 var words = data.words;
+                console.trace();
                 var fontSize = d3.scale.linear()
                     .range([10, 40])
                     .domain(d3.extent(words, function(d) { return d.bg_count; }));
@@ -254,7 +255,8 @@ angular.module("App").directive("ringCloud", function() {
                 var enterText = sel.enter().append("text")
                     .style("font-family", "Arial")
                     .attr("text-anchor", "middle")
-                    .style("fill", "white")
+                    .style("fill", function(d) { return fill(d.score); })
+                    //.style("fill", "white")
                     .attr("class", "cloudWord")
                     .text(function(d) { return d.text; })
                     .on("click", function(d) {
@@ -271,10 +273,19 @@ angular.module("App").directive("ringCloud", function() {
                         $scope.$emit('word-out', d);
                     });
                 
+                var arcPosition = getXY([$scope.style.padding, width / 2], radius);
+                var groupArc;
                 if($scope.selectedGroup){
-                    var groupArc = getRing($scope.ringData, $scope.selectedGroup.key);
-                    var arcPosition = getXY([$scope.style.padding, width / 2], radius);
+                    groupArc = getRing($scope.ringData, $scope.selectedGroup.key);
                     enterText.attr("transform", function(d) {
+                        var pos = arcPosition(groupArc.middleAngle);
+                        return "translate(" +
+                            [pos[0] - (width / 2), pos[1] - (height / 2)] + ")rotate(" + d.rotate + ")";
+                    });
+                } else {
+                    enterText.attr("transform", function(d) {
+                        var arcIdx = Math.floor(Math.random() * $scope.ringData.length);
+                        groupArc = $scope.ringData[arcIdx];
                         var pos = arcPosition(groupArc.middleAngle);
                         return "translate(" +
                             [pos[0] - (width / 2), pos[1] - (height / 2)] + ")rotate(" + d.rotate + ")";
@@ -332,8 +343,10 @@ angular.module("App").directive("ringCloud", function() {
             $scope.selectGroup = function(group, noWord) {
                 
                 $scope.selectedGroup = group;
+                
                 if(!noWord) { $scope.selectWord(undefined, true); }
                 if(!group) {
+                    console.log('gona call with:', group);
                     $scope.updateCloud($scope.data);
                     $scope.board.ringGroup.selectAll(".arc")
                         .classed("selected", false)
@@ -346,6 +359,7 @@ angular.module("App").directive("ringCloud", function() {
                     $scope.boardHTML.selectAll(".labelGroup")
                         .classed("dimmed", false);
                 }else {
+                    console.log('gona call with:', group);
                     $scope.updateCloud(group);
                     $scope.board.ringGroup.selectAll(".arc")
                         .classed("selected", function(d) { return d.data.key === group.key; })
