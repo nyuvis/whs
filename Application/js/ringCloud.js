@@ -227,7 +227,6 @@ angular.module("App").directive("ringCloud", function() {
             };
             $scope.updateCloud = function(data) {
                 var words = data.words;
-                console.trace();
                 var fontSize = d3.scale.linear()
                     .range([10, 40])
                     .domain(d3.extent(words, function(d) { return d.bg_count; }));
@@ -310,10 +309,15 @@ angular.module("App").directive("ringCloud", function() {
                 
                 ringData.forEach(function(r) {
                     var prop = r.data.doc_count / r.data.count;
+                    var minAngle = 0.02;
                     r.prop = prop;
-                    r.endAngle = r. startAngle + diffAngle(r.startAngle, r.endAngle) * prop;
+                    var angDiff = diffAngle(r.startAngle, r.endAngle) * prop;
+                    if(prop > 0 && angDiff < minAngle){
+                        angDiff = minAngle;
+                    }
+                    
+                    r.endAngle = r. startAngle + angDiff;
                 });
-                
                 //Entering ****************
                 var g = $scope.board.ringGroupHighlight.selectAll(".arcHigh")
                     .data(ringData);
@@ -335,6 +339,10 @@ angular.module("App").directive("ringCloud", function() {
                     });
                 
                 $scope.board.ringGroup.selectAll(".arc").classed("gray", true);
+                $scope.boardHTML.selectAll(".labelGroup").each(function(d) {
+                    var r = ringData.filter(function(f) { return f.data.key === d.data.key; })[0];
+                    d3.select(this).classed("grayDiv", r.prop === 0);
+                });
             };
             
             /***************************************************************/
@@ -346,7 +354,6 @@ angular.module("App").directive("ringCloud", function() {
                 
                 if(!noWord) { $scope.selectWord(undefined, true); }
                 if(!group) {
-                    console.log('gona call with:', group);
                     $scope.updateCloud($scope.data);
                     $scope.board.ringGroup.selectAll(".arc")
                         .classed("selected", false)
@@ -414,9 +421,11 @@ angular.module("App").directive("ringCloud", function() {
                     .ringGroupHighlight.selectAll(".arcHigh")
                     .data([]).exit().remove();
                 $scope.board.ringGroup.selectAll(".arc").classed("gray", false);
+                $scope.boardHTML.selectAll(".labelGroup").classed("grayDiv", false);
                 if($scope.selectedWord) {
                     $scope.highlightWord($scope.selectedWord);
                 }
+                
             };
             /***********************************************************/
             

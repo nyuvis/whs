@@ -33,8 +33,9 @@ angular.module("App").directive("selectionDetails", function() {
                     data.details.then(function(det){
                         $timeout(function() {
                             data.numDocuments = det.numDocuments;
-                            console.log(det);
+                            data.numParagraphs = det.numParagraphs;
                             delete det.numDocuments;
+                            delete det.numParagraphs;
                             data.detailsList = det;
                             $scope.keysList = $scope.keys(det);
                             $scope.loading = false;
@@ -44,6 +45,11 @@ angular.module("App").directive("selectionDetails", function() {
                 }
                 $scope.$broadcast('selected-updated', data);
             };
+            
+            $scope.removeWord = function() {
+                $scope.$emit("remove-word", $scope.selected.key);
+            };
+            
             
             $scope.$on('group-reloaded', function(evt, data) {
                 $scope.selectGroup(data);

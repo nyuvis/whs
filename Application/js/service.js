@@ -17,7 +17,186 @@ Services.factory('srv', function(client) {
         { key: "National Context", desc: "National Context", type: ""}
     ];
     
-    srv.exclude = ["[1-9]*", "\\w{0,3}"].join("|");
+    srv.exclude = [
+        "[1-9]*",
+        "\\w{0,3}",
+        "a",
+        "about",
+        "above",
+        "after",
+        "again",
+        "against",
+        "all",
+        "am",
+        "an",
+        "and",
+        "any",
+        "are",
+        "aren't",
+        "as",
+        "at",
+        "be",
+        "because",
+        "been",
+        "before",
+        "being",
+        "below",
+        "between",
+        "both",
+        "but",
+        "by",
+        "can't",
+        "cannot",
+        "could",
+        "couldn't",
+        "did",
+        "didn't",
+        "do",
+        "does",
+        "doesn't",
+        "doing",
+        "don't",
+        "down",
+        "during",
+        "each",
+        "few",
+        "for",
+        "from",
+        "further",
+        "had",
+        "hadn't",
+        "has",
+        "hasn't",
+        "have",
+        "haven't",
+        "having",
+        "he",
+        "he'd",
+        "he'll",
+        "he's",
+        "her",
+        "here",
+        "here's",
+        "hers",
+        "herself",
+        "him",
+        "himself",
+        "his",
+        "how",
+        "how's",
+        "i",
+        "i'd",
+        "i'll",
+        "i'm",
+        "i've",
+        "if",
+        "in",
+        "into",
+        "is",
+        "isn't",
+        "it",
+        "it's",
+        "its",
+        "itself",
+        "let's",
+        "me",
+        "more",
+        "most",
+        "mustn't",
+        "my",
+        "myself",
+        "no",
+        "nor",
+        "not",
+        "of",
+        "off",
+        "on",
+        "once",
+        "only",
+        "or",
+        "other",
+        "ought",
+        "our",
+        "ours",
+        "ourselves",
+        "out",
+        "over",
+        "own",
+        "same",
+        "shan't",
+        "she",
+        "she'd",
+        "she'll",
+        "she's",
+        "should",
+        "shouldn't",
+        "so",
+        "some",
+        "such",
+        "than",
+        "that",
+        "that's",
+        "the",
+        "their",
+        "theirs",
+        "them",
+        "themselves",
+        "then",
+        "there",
+        "there's",
+        "these",
+        "they",
+        "they'd",
+        "they'll",
+        "they're",
+        "they've",
+        "this",
+        "those",
+        "through",
+        "to",
+        "too",
+        "under",
+        "until",
+        "up",
+        "very",
+        "was",
+        "wasn't",
+        "we",
+        "we'd",
+        "we'll",
+        "we're",
+        "we've",
+        "were",
+        "weren't",
+        "what",
+        "what's",
+        "when",
+        "when's",
+        "where",
+        "where's",
+        "which",
+        "while",
+        "who",
+        "who's",
+        "whom",
+        "why",
+        "why's",
+        "with",
+        "won't",
+        "would",
+        "wouldn't",
+        "you",
+        "you'd",
+        "you'll",
+        "you're",
+        "you've",
+        "your",
+        "yours",
+        "yourself",
+        "yourselves"
+    ];
+    
+    
     
     srv.run = function(body, then) {
         return client.search({
@@ -43,7 +222,7 @@ Services.factory('srv', function(client) {
             .field(state.field.key).size(20)
             .agg(ejs.SignificantTermsAggregation("words")
                  .field("text")
-                 .exclude(srv.exclude)
+                 .exclude(srv.exclude.join("|"))
                  .size(100));
         
         body.agg(aggs);
@@ -52,10 +231,23 @@ Services.factory('srv', function(client) {
         return srv.run(body, srv.processData);
     };
     
-    srv.getDocuments = function(search) {
+    srv.getDocuments = function(search, field) {
         var body = ejs.Request().size(100);
+        var queryString = "";
         if(search) {
-            var query = ejs.QueryStringQuery("text:" + search);
+           queryString = field + ":\"" + search + "\"";
+        }
+        if(srv.state.search) {
+            if(queryString.length > 0) {
+                console.log("here", queryString);
+                queryString += " AND ";
+            }
+            
+            queryString += "(text:" + srv.state.search + ")";
+        }
+        
+        if(queryString.length > 0) {
+            var query = ejs.QueryStringQuery(queryString);
             body.query(query);
         }
         
@@ -101,7 +293,7 @@ Services.factory('srv', function(client) {
     };
     
     srv.getDetails = function(select, field) {
-        var body = ejs.Request().size(0);
+        var body = ejs.Request().size(100);
         var queryString = field + ":\"" + select.key + "\"";
         
         srv.fields.forEach(function(a) {
@@ -133,7 +325,9 @@ Services.factory('srv', function(client) {
                 });
             }
         });
+        aggs.numParagraphs = result.hits.total;
         delete aggs._global;
+        console.log(aggs);
         return aggs;
     };
     
