@@ -69,7 +69,18 @@ Services.factory('srv', function(client) {
     };
     
     srv.loadDocuments = function(result) {
-        console.log(result);
+        var documents = {
+            total: result.hits.total,
+            surrogates: result.hits.hits.map(function(d) {
+                var surrogate = d._source;
+                if(d.highlight) {
+                    surrogate.text = d.highlight.text[0];
+                    return surrogate;
+                }
+            }).filter(function(d) { return d ? true : false; })
+        };
+        
+        return documents;
     };
     
     srv.getWordsInfo = function(words){

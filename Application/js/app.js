@@ -115,7 +115,13 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
             scope.state.selectedWord = data;
             if(data) {
                 data.details = scope.getDetails(data, "text");
+                srv.getDocuments(data.key).then(function(documents){
+                    scope.$broadcast('documents-updated', documents);
+                });
+            } else {
+                srv.getDocuments(undefined);
             }
+            
             scope.$broadcast('word-selected', data);
         }
         scope.layout(true);
