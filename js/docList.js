@@ -12,6 +12,10 @@ angular.module("App").directive("docList", function() {
             $scope.$on('data-updated', function(evt, data) {
                 $scope.data = data;
             });
+            $scope.$on('documents-updated', function(evt, data) {
+                console.log(data, $scope.data);
+                $scope.data.documents = data;
+            });
         }
     };
 });
