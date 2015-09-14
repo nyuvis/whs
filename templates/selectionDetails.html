@@ -2,12 +2,13 @@
 <div class="sidebarHeader">
     <h2>Selected:</h2>
     <span class="selectedKey" ng-class="{small: type === 'group'}">
-       {{ selected.key }}
+       {{ selected.key }} <br />
+       <a href="" ng-if="type === 'word'" ng-click="removeWord()" style="font-size: 14px">Remove from cloud</a>
     </span>
     <table class="statsTable">
         <tr>
             <th>{{selected.numDocuments.value}}</td>
-            <th>{{selected.count ? selected.count : (selected.bg_count ? selected.bg_count: selected.doc_count) }}</td>
+            <th>{{selected.numParagraphs}}</td>
         </tr>
         <tr>
             <td>Documents</td>

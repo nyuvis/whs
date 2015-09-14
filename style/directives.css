@@ -33,6 +33,10 @@
 #vizBoard .gray path {
   fill: #eee !important;
 }
+#vizBoard .grayDiv {
+  background-color: #ccc !important;
+  opacity: 0.1;
+}
 #vizBoard .cloudWord {
   cursor: pointer;
 }

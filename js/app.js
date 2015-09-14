@@ -56,7 +56,6 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
         
         document.getElementById("sideBar").style.width = sideBarWidth;
         
-        
         document.getElementById("docList").style.width = 200;
         document.getElementById("docList").style.right = 0;
         document.getElementById("docList").style.top = headerRect.height;
@@ -87,6 +86,13 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
         if(scope.state.selectedGroup !== data) {
             if(data) {
                 data.details = scope.getDetails(data, scope.state.field.key);
+                srv.getDocuments(data.key, scope.state.field.key).then(function(documents){
+                    scope.$broadcast('documents-updated', documents);
+                });
+            } else {
+                srv.getDocuments(data, scope.state.field.key).then(function(documents){
+                    scope.$broadcast('documents-updated', documents);
+                });
             }
             scope.$broadcast('group-selected', data);
         }
@@ -96,6 +102,13 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
     scope.$on('group-reload', function(evt, data) {
         if(data) {
             data.details = scope.getDetails(data, scope.state.field.key);
+            srv.getDocuments(data.key, scope.state.field.key).then(function(documents){
+                scope.$broadcast('documents-updated', documents);
+            });
+        } else {
+            srv.getDocuments(data, scope.state.field.key).then(function(documents){
+                scope.$broadcast('documents-updated', documents);
+            });
         }
         scope.$broadcast('group-reloaded', data);
         scope.state.selectedGroup = data;
@@ -109,19 +122,26 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
          scope.$broadcast('word-unHighlighted', data);
     });
     
+    scope.$on('remove-word', function(evt, data) {
+        scope.$broadcast('word-clicked', undefined);
+        srv.exclude.push(data);
+        scope.loadData();
+    });
+    
     scope.$on('word-clicked', function(evt, data) {
-       
         if(scope.state.selectedWord !== data) {
             scope.state.selectedWord = data;
             if(data) {
                 data.details = scope.getDetails(data, "text");
-                srv.getDocuments(data.key).then(function(documents){
+                srv.getDocuments(data.key, "text").then(function(documents){
                     scope.$broadcast('documents-updated', documents);
                 });
             } else {
-                srv.getDocuments(undefined);
+                srv.getDocuments(data, "text").then(function(documents){
+                    scope.$broadcast('documents-updated', documents);
+                });
             }
-            
+                
             scope.$broadcast('word-selected', data);
         }
         scope.layout(true);

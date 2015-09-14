@@ -14,6 +14,7 @@
     "no-use-before-define": 0,
     "strict": 0,
     "new-cap": 0,
+    "camelcase": 0,
     "quotes": 0,
     "no-trailing-spaces": [2, { "skipBlankLines": true }],
     "eol-last": 0,
