@@ -52,6 +52,26 @@ Services.factory('srv', function(client) {
         return srv.run(body, srv.processData);
     };
     
+    srv.getDocuments = function(search) {
+        var body = ejs.Request().size(100);
+        if(search) {
+            var query = ejs.QueryStringQuery("text:" + search);
+            body.query(query);
+        }
+        
+        var highlight = ejs.Highlight("text")
+            .numberOfFragments(0).toJSON();
+            highlight.no_match_size = 200000;
+      
+        body = body.toJSON();
+        body.highlight = highlight;
+        return srv.run(body, srv.loadDocuments);
+    };
+    
+    srv.loadDocuments = function(result) {
+        console.log(result);
+    };
+    
     srv.getWordsInfo = function(words){
         var body = ejs.Request().size(0);
         
