@@ -366,7 +366,6 @@ angular.module("App").directive("ringCloud", function() {
                     $scope.boardHTML.selectAll(".labelGroup")
                         .classed("dimmed", false);
                 }else {
-                    console.log('gona call with:', group);
                     $scope.updateCloud(group);
                     $scope.board.ringGroup.selectAll(".arc")
                         .classed("selected", function(d) { return d.data.key === group.key; })

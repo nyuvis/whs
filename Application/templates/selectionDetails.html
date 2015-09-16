@@ -18,6 +18,6 @@
 </div>
 <div class="chartList">
     <div ng-repeat="key in keysList">
-        <div chart data="selected.detailsList[key]", selected='selected' ng-if="key !== state.field.key" key="key"></div>
+        <div ng-if="selected.detailsList[key].length > 0 && key !== state.field.key" chart data="selected.detailsList[key]", selected='selected' key="key"></div>
     </div>
 </div>

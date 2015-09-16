@@ -3,6 +3,7 @@ var Services = angular.module("Services", ["elasticsearch"]);
 Services.service('client', function (esFactory) {
     return esFactory({
         host: 'vgc.poly.edu/projects/r2sense/'
+        //host: 'localhost:9500'
     });
 });
 Services.factory('srv', function(client) {
@@ -14,7 +15,8 @@ Services.factory('srv', function(client) {
         { key: "subtopic", desc: "Sub-topic", type: ""},
         //{ key: "Pacific Region", desc: "Pacific Region", type: ""},
         { key: "WHS Output", desc: "WHS Output", type: ""},
-        { key: "National Context", desc: "National Context", type: ""}
+        { key: "National Context", desc: "National Context", type: ""},
+        { key: "Region", desc: "Region", type: ""}
     ];
     
     srv.exclude = [
@@ -200,7 +202,7 @@ Services.factory('srv', function(client) {
     
     srv.run = function(body, then) {
         return client.search({
-          index: 'whs4',
+          index: 'whs6',
           type: 'document',
           body: body.toJSON ? body.toJSON() : body
         }).then(function (resp) { return then(resp); });
@@ -230,31 +232,29 @@ Services.factory('srv', function(client) {
         body.highlight = highlight;
         return srv.run(body, srv.processData);
     };
-    
-    srv.getDocuments = function(search, field) {
+    srv.getDocuments = function(state) {
         var body = ejs.Request().size(100);
-        var queryString = "";
-        if(search) {
-           queryString = field + ":\"" + search + "\"";
+        var query = ejs.BoolQuery();
+        if(state.selectedWord) {
+            query.must(ejs.TermQuery("text", state.selectedWord.key));
         }
-        if(srv.state.search) {
-            if(queryString.length > 0) {
-                console.log("here", queryString);
-                queryString += " AND ";
-            }
-            
-            queryString += "(text:" + srv.state.search + ")";
+        if(state.search) {
+            query.must(ejs.QueryStringQuery(srv.state.search)
+                      .fields(["text"]));
         }
         
-        if(queryString.length > 0) {
-            var query = ejs.QueryStringQuery(queryString);
-            body.query(query);
+        if(state.selectedGroup) {
+            query.must(ejs.TermQuery(state.field.key, state.selectedGroup.key));
         }
         
+        if(state.detailsFilter ) {
+            query.must(ejs.TermQuery(state.detailsFilter.field, state.detailsFilter.value));
+        }
         var highlight = ejs.Highlight("text")
             .numberOfFragments(0).toJSON();
             highlight.no_match_size = 200000;
-      
+        console.log(body);
+        body.query(query);
         body = body.toJSON();
         body.highlight = highlight;
         return srv.run(body, srv.loadDocuments);
@@ -294,7 +294,8 @@ Services.factory('srv', function(client) {
     
     srv.getDetails = function(select, field) {
         var body = ejs.Request().size(100);
-        var queryString = field + ":\"" + select.key + "\"";
+        var query = ejs.BoolQuery();
+        query.must(ejs.TermQuery(field, select.key));
         
         srv.fields.forEach(function(a) {
             body.agg(ejs.TermsAggregation(a.key).field(a.key).size(20));
@@ -308,10 +309,11 @@ Services.factory('srv', function(client) {
         body.agg(globalAgg);
         
         if(srv.state.search) {
-            queryString += " AND (text:" + srv.state.search + ")";
+            query.must(ejs.QueryStringQuery(srv.state.search)
+                      .fields(["text"]));
         }
-        var search = ejs.QueryStringQuery(queryString);
-        body.query(search);
+        
+        body.query(query);
         return srv.run(body, srv.processDetails);
     };
     
