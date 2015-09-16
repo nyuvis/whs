@@ -50,6 +50,7 @@ angular.module("App").directive("selectionDetails", function() {
                 $scope.$emit("remove-word", $scope.selected.key);
             };
             
+           
             
             $scope.$on('group-reloaded', function(evt, data) {
                 $scope.selectGroup(data);

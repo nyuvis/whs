@@ -11,6 +11,7 @@ angular.module("App").directive("chart", function() {
         controller: function($scope, srv) {
             $scope.def = get(srv.fields, $scope.key);
             $scope.data.sort(function(a, b) { return d3.ascending(a.key, b.key); });
+            
             var width = 200;
             var height = 200;
             
@@ -64,6 +65,10 @@ angular.module("App").directive("chart", function() {
                         color: function() {
                             // d will be 'id' when called for legends
                             return 'rgba(106, 48, 163, 0.85)';
+                        },
+                        onclick: function (d) {
+                            var obj = $scope.data[d.index];
+                            $scope.$emit('detail-clicked', { field: $scope.key, value: obj.key});
                         }
                     },
                     axis: {

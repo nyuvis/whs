@@ -19,6 +19,17 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
     
     scope.loadData = function() {
         scope.loading++;
+        if(scope.state.selectedGroup) {
+            scope.$broadcast('group-selected', undefined);
+        }
+        if(scope.state.selectedWord) {
+            scope.$broadcast('word-selected', undefined);
+        }
+        
+        scope.state.detailsFilter = undefined;
+        scope.state.selectedGroup = undefined;
+        scope.state.selectedWord = undefined;
+        
         return srv.getData(scope.state).then(function(result){
             result.links.then(scope.setLinks);
             scope.setData(result);
@@ -83,35 +94,51 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
     });
     /***********************************************************/
     scope.$on('group-clicked', function(evt, data) {
+        scope.state.detailsFilter = undefined;
+        
         if(scope.state.selectedGroup !== data) {
+            scope.state.selectedGroup = data;
             if(data) {
                 data.details = scope.getDetails(data, scope.state.field.key);
-                srv.getDocuments(data.key, scope.state.field.key).then(function(documents){
-                    scope.$broadcast('documents-updated', documents);
-                });
-            } else {
-                srv.getDocuments(data, scope.state.field.key).then(function(documents){
-                    scope.$broadcast('documents-updated', documents);
-                });
             }
+            srv.getDocuments(scope.state).then(function(documents){
+                scope.$broadcast('documents-updated', documents);
+            });
             scope.$broadcast('group-selected', data);
         }
-        scope.state.selectedGroup = data;
+        
         scope.layout(true);
     });
     scope.$on('group-reload', function(evt, data) {
+        scope.state.detailsFilter = undefined;
         if(data) {
             data.details = scope.getDetails(data, scope.state.field.key);
-            srv.getDocuments(data.key, scope.state.field.key).then(function(documents){
-                scope.$broadcast('documents-updated', documents);
-            });
-        } else {
-            srv.getDocuments(data, scope.state.field.key).then(function(documents){
-                scope.$broadcast('documents-updated', documents);
-            });
         }
+        srv.getDocuments(scope.state).then(function(documents){
+            scope.$broadcast('documents-updated', documents);
+        });
         scope.$broadcast('group-reloaded', data);
         scope.state.selectedGroup = data;
+    });
+    scope.$on('detail-clicked', function(evt, data){
+        scope.state.detailsFilter = data;
+        srv.getDocuments(scope.state).then(function(documents){
+            scope.$broadcast('documents-updated', documents);
+        });
+    });
+    scope.$on('word-clicked', function(evt, data) {
+        scope.state.detailsFilter = undefined;
+        if(scope.state.selectedWord !== data) {
+            scope.state.selectedWord = data;
+            if(data) {
+                data.details = scope.getDetails(data, "text");
+            }
+            srv.getDocuments(scope.state).then(function(documents){
+                scope.$broadcast('documents-updated', documents);
+            });
+            scope.$broadcast('word-selected', data);
+        }
+        scope.layout(true);
     });
     
     scope.$on('word-hover', function(evt, data){
@@ -128,24 +155,7 @@ App.controller("AppCtrl", ["$scope", "srv", "$window", function(scope, srv, $win
         scope.loadData();
     });
     
-    scope.$on('word-clicked', function(evt, data) {
-        if(scope.state.selectedWord !== data) {
-            scope.state.selectedWord = data;
-            if(data) {
-                data.details = scope.getDetails(data, "text");
-                srv.getDocuments(data.key, "text").then(function(documents){
-                    scope.$broadcast('documents-updated', documents);
-                });
-            } else {
-                srv.getDocuments(data, "text").then(function(documents){
-                    scope.$broadcast('documents-updated', documents);
-                });
-            }
-                
-            scope.$broadcast('word-selected', data);
-        }
-        scope.layout(true);
-    });
+    
     angular.element($window).bind('resize', scope.layout);
     scopeTest = scope;
 }]);

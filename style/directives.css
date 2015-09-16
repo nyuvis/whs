@@ -78,10 +78,15 @@
   text-align: left;
   position: absolute;
   bottom: 0px;
-  top: 50px;
+  top: 40px;
   left: 0px;
   right: 0px;
   overflow: auto;
+}
+#sideBar .documentName {
+  color: #555;
+  border-top: solid 1px #ccc;
+  display: block;
 }
 #sideBar .snippet {
   font-family: "Times new roman";
